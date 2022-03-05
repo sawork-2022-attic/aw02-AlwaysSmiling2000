@@ -6,6 +6,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
+// 这个类用于改变命令行提示符，未登录时显示 unknown；登录后显示
+// 用户名
 @Component
 public class PosPromptProvider implements PromptProvider {
 
