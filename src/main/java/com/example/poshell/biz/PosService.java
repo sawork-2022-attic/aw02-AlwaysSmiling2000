@@ -1,23 +1,34 @@
 package com.example.poshell.biz;
 
-import com.example.poshell.model.Cart;
+import com.example.poshell.model.Customer;
+import com.example.poshell.model.Item;
 import com.example.poshell.model.Product;
 
 import java.util.List;
 
+// 业务逻辑接口
 public interface PosService {
-    public Cart getCart();
 
-    public Cart newCart();
+    public PosResult<Customer> signIn(String name, String passwd);
 
-    public void checkout(Cart cart);
+    public PosResult<Customer> logIn(String name, String passwd);
 
-    public void total(Cart cart);
+    public PosResult<Object> logOut();
 
-    public boolean add(Product product, int amount);
+    public PosResult<List<Product>> getAllProducts();
 
-    public boolean add(String productId, int amount);
+    public PosResult<Object> addToCustomerCart(int customerId, int productId, int amount);
 
+    public PosResult<Object> setInCustomerCart(int customerId, int productId, int amount);
 
-    public List<Product> products();
+    public PosResult<Object> removeFromCustomerCart(int customerId, int productId);
+
+    public PosResult<Integer> emptyCustomerCart(int customerId);
+
+    public PosResult<List<Item>> getItemsInCustomerCart(int customerId);
+
+//    public void buyProductById(String productId, int amount);
+//
+//    public void buyAllProductsInCart();
+
 }

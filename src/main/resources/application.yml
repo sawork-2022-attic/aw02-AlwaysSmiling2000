@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    # sqlite 中如果 url 以 :resource: 开头会到类路径下找
+    url: jdbc:sqlite::resource:sqlite3/posDB.db
+    username:
+    password:
+    driver-class-name: org.sqlite.JDBC
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.example.poshell.model
+  configuration:
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    jdbc-type-for-null: null

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.poshell.db.SqlitePosDB">
+<!--    将数据库查询结果的每一列映射到 Product 对象的对应属性，-->
+<!--    查询到多个结果会根据接口返回类型为 List 自动封装-->
+    <resultMap id="productMap" type="product">
+        <id column="product_id" property="id"/>
+        <result column="product_name" property="name"/>
+        <result column="product_price" property="price"/>
+    </resultMap>
+
+    <resultMap id="customerMap" type="Customer">
+        <id column="customer_id" property="id"/>
+        <result column="customer_name" property="name"/>
+    </resultMap>
+
+    <resultMap id="itemMap" type="Item">
+        <result column="product_id" property="product.id"/>
+        <result column="product_name" property="product.name"/>
+        <result column="product_price" property="product.price"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+
+    <select id="openForeignKeyConstraint">
+        PRAGMA FOREIGN_KEYS = ON
+    </select>
+
+    <insert id="addCustomer">
+        INSERT INTO customer(customer_name, customer_token)
+        VALUES (#{name}, #{token})
+--         获取自增主键值
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ROWID() FROM customer LIMIT 1
+        </selectKey>
+    </insert>
+
+    <select id="getCustomer" resultMap="customerMap">
+        SELECT customer_id, customer_name
+        FROM customer
+        WHERE customer_name = #{name} AND customer_token = #{token}
+    </select>
+
+    <select id="getAllProducts" resultMap="productMap">
+        SELECT * FROM product
+    </select>
+
+    <insert id="addToCustomerCart">
+        INSERT INTO cart(customer_id, product_id, amount)
+        VALUES (#{customerId}, #{productId}, #{amount})
+        ON CONFLICT(customer_id, product_id) DO UPDATE
+        SET amount = amount + #{amount}
+    </insert>
+
+    <update id="setInCustomerCart">
+        UPDATE cart SET amount = #{amount}
+        WHERE customer_id = #{customerId} AND product_id = #{productId}
+    </update>
+
+    <delete id="removeFromCustomerCart">
+        DELETE FROM cart
+        WHERE customer_id = #{customerId} AND product_id = #{productId}
+    </delete>
+
+    <delete id="emptyCustomerCart">
+        DELETE FROM cart WHERE customer_id = #{customerId}
+    </delete>
+
+    <select id="getItemsInCustomerCart" resultMap="itemMap">
+        SELECT p.product_id, product_name, product_price, amount
+        FROM product p, cart c
+        WHERE p.product_id = c.product_id AND c.customer_id = #{customerId}
+    </select>
+
+</mapper>
