@@ -126,7 +126,7 @@ public class PosCommand {
         List<Item> itemList = result.getBody();
         StringBuilder stringBuilder = new StringBuilder(ok(itemList.size() + " items in cart.\n"));
         stringBuilder.append("Id\t\tName\t\t\tPrice\t\tAmount\n");
-        stringBuilder.append("-------------------------------------------------\n");
+        stringBuilder.append("----------------------------------------------------------------\n");
         double totalPrice = 0;
         for (Item item : itemList) {
             Product product = item.getProduct();
@@ -140,7 +140,7 @@ public class PosCommand {
             stringBuilder.append('\n');
             totalPrice += product.getPrice() * item.getAmount();
         }
-        stringBuilder.append("-------------------------------------------------\n");
+        stringBuilder.append("----------------------------------------------------------------\n");
         stringBuilder.append("Total: ");
         stringBuilder.append(totalPrice);
         stringBuilder.append('\n');
